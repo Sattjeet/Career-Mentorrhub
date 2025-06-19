@@ -75,7 +75,7 @@ form.addEventListener("submit", function (e) {
       announcement_heading: title,
     };
     console.log(data);
-    const response = await fetch("http://localhost:3000/add-announcement", {
+    const response = await fetch("http://http://13.60.84.13:3000/add-announcement", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -119,7 +119,7 @@ window.addEventListener("load", () => {
 document.addEventListener("DOMContentLoaded", function () {
   async function fetchAndRenderLeads() {
     try {
-      const response = await fetch("http://localhost:3000/leads");
+      const response = await fetch("http://http://13.60.84.13:3000/leads");
       const data = await response.json();
       const leads = data;
       console.log(data);
