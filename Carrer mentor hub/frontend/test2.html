@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Reviews</title>
+    <style>
+      :root {
+        --primary-green: #6eb405;
+        --primary-navy: #06234d;
+        --primary-blue: #30acf6;
+        --light-gray: #fefefe;
+        --dark-black: #000000;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary-navy) 0%,
+          var(--primary-blue) 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        background: var(--light-gray);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .header h1 {
+        color: var(--primary-navy);
+        font-size: 2.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .stats-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        min-width: 120px;
+        border-left: 4px solid var(--primary-green);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-navy);
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+
+      .review-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-blue);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+
+      .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .reviewer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(
+          45deg,
+          var(--primary-green),
+          var(--primary-blue)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+
+      .reviewer-details h4 {
+        color: var(--primary-navy);
+        font-size: 1.1rem;
+        margin-bottom: 3px;
+      }
+
+      .reviewer-details .review-date {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .rating-stars {
+        display: flex;
+        gap: 3px;
+      }
+
+      .star {
+        color: #ffc107;
+        font-size: 1.2rem;
+      }
+
+      .star.empty {
+        color: #e0e0e0;
+      }
+
+      .review-content {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-size: 1rem;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        padding: 30px 0;
+      }
+
+      .pagination-btn {
+        padding: 12px 20px;
+        border: none;
+        background: var(--primary-navy);
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .pagination-btn:hover:not(:disabled) {
+        background: #04182d;
+        transform: translateY(-2px);
+      }
+
+      .pagination-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .page-info {
+        font-weight: 600;
+        color: var(--primary-navy);
+        font-size: 1rem;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px;
+        color: #999;
+      }
+
+      .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+
+      .add-review-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary-green);
+      }
+
+      .add-review-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .add-review-header h2 {
+        color: var(--primary-navy);
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary-navy);
+        font-size: 1rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: var(--light-gray);
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(48, 172, 246, 0.1);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+      }
+
+      .rating-input {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .rating-star {
+        font-size: 2rem;
+        color: #e0e0e0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+
+      .rating-star:hover,
+      .rating-star.active {
+        color: #ffc107;
+        transform: scale(1.1);
+      }
+
+      .rating-star:hover ~ .rating-star {
+        color: #e0e0e0;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        margin-top: 25px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-primary {
+        background: var(--primary-green);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5a6e04;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(110, 132, 5, 0.3);
+      }
+
+      .btn-secondary {
+        background: #f8f9fa;
+        color: var(--primary-navy);
+        border: 2px solid #e1e5e9;
+      }
+
+      .btn-secondary:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        .header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .reviews-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          justify-content: center;
+        }
+
+        .pagination {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>⭐ All Reviews</h1>
+        <div class="stats-container">
+          <div class="stat-card">
+            <span class="stat-number" id="totalReviews">0</span>
+            <div class="stat-label">Total Reviews</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="avgRating">0.0</span>
+            <div class="stat-label">Avg Rating</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-number" id="monthlyReviews">0</span>
+            <div class="stat-label">This Month</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-review-section">
+        <div class="add-review-header">
+          <h2>✍️ Write a Review</h2>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          Review submitted successfully! Thank you for your feedback.
+        </div>
+
+        <form id="reviewForm">
+          <div class="form-group">
+            <label for="customerName" class="form-label">Your Name</label>
+            <input
+              type="text"
+              id="customerName"
+              name="customerName"
+              class="form-input"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="rating" class="form-label">Rating</label>
+            <div class="rating-input" id="ratingInput">
+              <span class="rating-star" data-rating="1">★</span>
+              <span class="rating-star" data-rating="2">★</span>
+              <span class="rating-star" data-rating="3">★</span>
+              <span class="rating-star" data-rating="4">★</span>
+              <span class="rating-star" data-rating="5">★</span>
+              <span
+                id="ratingText"
+                style="margin-left: 10px; color: #666; font-size: 0.9rem"
+                >Click to rate</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reviewContent" class="form-label">Your Review</label>
+            <textarea
+              id="reviewContent"
+              name="reviewContent"
+              class="form-input form-textarea"
+              placeholder="Share your experience with us..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="resetBtn">
+              Reset
+            </button>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="reviews-grid" id="reviewsGrid">
+        <!-- Reviews will be dynamically inserted here -->
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn" id="prevPage">← Previous</button>
+        <span class="page-info">
+          Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+        </span>
+        <button class="pagination-btn" id="nextPage">Next →</button>
+      </div>
+    </div>
+
+    <script>
+      // Sample reviews data
+      /*let reviewsData = [
+        {
+          id: 1,
+          customerName: "Sarah Johnson",
+          rating: 5,
+          content:
+            "Absolutely amazing service! The team went above and beyond my expectations. The product quality is outstanding and delivery was super fast. Highly recommend to everyone!",
+          date: "2024-06-14",
+          category: "product",
+        },
+        {
+          id: 2,
+          customerName: "Mike Chen",
+          rating: 4,
+          content:
+            "Great experience overall. The product works as expected and customer service was helpful when I had questions. Minor packaging issue but nothing major.",
+          date: "2024-06-13",
+          category: "service",
+        },
+        {
+          id: 3,
+          customerName: "Emily Rodriguez",
+          rating: 5,
+          content:
+            "Perfect! Exactly what I was looking for. Fast shipping, great communication, and the product exceeded my expectations. Will definitely order again.",
+          date: "2024-06-12",
+          category: "delivery",
+        },
+        {
+          id: 4,
+          customerName: "David Thompson",
+          rating: 3,
+          content:
+            "Good product but took longer than expected to arrive. Customer service was responsive when I reached out about the delay. Product quality is decent.",
+          date: "2024-06-11",
+          category: "delivery",
+        },
+        {
+          id: 5,
+          customerName: "Lisa Wang",
+          rating: 5,
+          content:
+            "Outstanding quality and service! The attention to detail is impressive. Support team is incredibly knowledgeable and friendly. A+ experience!",
+          date: "2024-06-10",
+          category: "support",
+        },
+        {
+          id: 6,
+          customerName: "Robert Martinez",
+          rating: 2,
+          content:
+            "Product didnt meet my expectations. Had some issues with functionality and customer service response was slow. Hoping for improvements.",
+          date: "2024-06-09",
+          category: "product",
+        },
+        {
+          id: 7,
+          customerName: "Jennifer Lee",
+          rating: 4,
+          content:
+            "Very satisfied with my purchase! Good value for money and the team was helpful throughout the process. Minor room for improvement in packaging.",
+          date: "2024-06-08",
+          category: "service",
+        },
+        {
+          id: 8,
+          customerName: "Alex Brown",
+          rating: 5,
+          content:
+            "Incredible experience! From start to finish, everything was smooth and professional. Product quality is top-notch and delivery was lightning fast.",
+          date: "2024-06-07",
+          category: "product",
+        },
+      ];*/
+
+      document.addEventListener("DOMContentLoaded", function () {
+        async function fetchAndRenderReviews() {
+          try {
+            const response = await fetch("http://localhost:3000/reviews");
+            const data = await response.json();
+            const reviews = data;
+            console.log(data);
+
+            let reviewsData = data;
+
+            let currentPage = 1;
+            const reviewsPerPage = 6;
+            let selectedRating = 0;
+
+            // DOM elements
+            const reviewsGrid = document.getElementById("reviewsGrid");
+            const totalReviewsSpan = document.getElementById("totalReviews");
+            const avgRatingSpan = document.getElementById("avgRating");
+            const monthlyReviewsSpan =
+              document.getElementById("monthlyReviews");
+            const currentPageSpan = document.getElementById("currentPage");
+            const totalPagesSpan = document.getElementById("totalPages");
+            const prevPageBtn = document.getElementById("prevPage");
+            const nextPageBtn = document.getElementById("nextPage");
+            const reviewForm = document.getElementById("reviewForm");
+            const ratingStars = document.querySelectorAll(".rating-star");
+            const ratingText = document.getElementById("ratingText");
+            const successMessage = document.getElementById("successMessage");
+            const resetBtn = document.getElementById("resetBtn");
+
+            // Initialize the page
+            function init() {
+              renderReviews();
+              updateStats();
+              updatePagination();
+              setupEventListeners();
+              setupRatingSystem();
+            }
+
+            function setupRatingSystem() {
+              ratingStars.forEach((star, index) => {
+                star.addEventListener("click", () => {
+                  selectedRating = index + 1;
+                  updateRatingDisplay();
+                });
+
+                star.addEventListener("mouseenter", () => {
+                  highlightStars(index + 1);
+                });
+              });
+
+              document
+                .getElementById("ratingInput")
+                .addEventListener("mouseleave", () => {
+                  updateRatingDisplay();
+                });
+            }
+
+            function highlightStars(rating) {
+              ratingStars.forEach((star, index) => {
+                if (index < rating) {
+                  star.classList.add("active");
+                } else {
+                  star.classList.remove("active");
+                }
+              });
+
+              const ratingLabels = [
+                "",
+                "Poor",
+                "Fair",
+                "Good",
+                "Very Good",
+                "Excellent",
+              ];
+              ratingText.textContent = ratingLabels[rating] || "Click to rate";
+            }
+
+            function updateRatingDisplay() {
+              highlightStars(selectedRating);
+            }
+
+            function resetForm() {
+              reviewForm.reset();
+              selectedRating = 0;
+              ratingStars.forEach((star) => star.classList.remove("active"));
+              ratingText.textContent = "Click to rate";
+              successMessage.style.display = "none";
+            }
+
+            function submitReview(event) {
+              event.preventDefault();
+
+              const formData = new FormData(reviewForm);
+              const customerName = formData.get("customerName");
+              const reviewContent = formData.get("reviewContent");
+
+              // Validate rating selection
+              if (selectedRating === 0) {
+                alert("Please select a rating");
+                return;
+              }
+
+              // Create new review object
+              const newReview = {
+                reviewer_name: customerName,
+                stars: selectedRating,
+                review: reviewContent,
+              };
+
+              uploadReview(newReview);
+
+              // Add to reviews data (add to beginning of array)
+
+              // Show success message
+              successMessage.style.display = "block";
+
+              // Reset form
+
+              // Scroll to top to show success message
+              document
+                .querySelector(".add-review-section")
+                .scrollIntoView({ behavior: "smooth" });
+
+              // Hide success message after 5 seconds
+
+              // Optional: Call additional functions to update other parts of the page
+              // updateStats();
+              // renderReviews();
+              // updatePagination();
+            }
+
+            async function uploadReview(data) {
+              const response = await fetch("http://localhost:3000/add-review", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+              });
+              console.log("sent");
+              const result = await response.json();
+              console.log(result.message);
+            }
+
+            function renderReviews() {
+              const startIndex = (currentPage - 1) * reviewsPerPage;
+              const endIndex = startIndex + reviewsPerPage;
+              const paginatedReviews = reviewsData.slice(startIndex, endIndex);
+
+              if (paginatedReviews.length === 0) {
+                reviewsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💬</div>
+                        <h3>No Reviews Found</h3>
+                        <p>No reviews available at the moment</p>
+                    </div>
+                `;
+                return;
+              }
+
+              reviewsGrid.innerHTML = paginatedReviews
+                .map(
+                  (review) => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">${review.reviewer_name.charAt(0)}</div>
+                            <div class="reviewer-details">
+                                <h4>${review.reviewer_name}</h4>
+                                <div class="review-date">${formatDate(review.review_date)}</div>
+                            </div>
+                        </div>
+                        <div class="rating-stars">
+                            ${generateStars(review.stars)}
+                        </div>
+                    </div>
+                    <div class="review-content">${review.review}</div>
+                </div>
+            `
+                )
+                .join("");
+            }
+
+            function generateStars(rating) {
+              let stars = "";
+              for (let i = 1; i <= 5; i++) {
+                stars += `<span class="star ${i <= rating ? "" : "empty"}">★</span>`;
+              }
+              return stars;
+            }
+
+            function formatDate(dateString) {
+              const date = new Date(dateString);
+              return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              });
+            }
+
+            function updateStats() {
+              totalReviewsSpan.textContent = reviewsData.length;
+
+              const avgRating =
+                reviewsData.reduce((sum, review) => sum + review.stars, 0) /
+                reviewsData.length;
+              avgRatingSpan.textContent = avgRating.toFixed(1);
+
+              const currentDate = new Date();
+              const currentMonth = currentDate.getMonth();
+              const currentYear = currentDate.getFullYear();
+
+              const monthlyCount = reviewsData.filter((review) => {
+                const reviewDate = new Date(review.review_date);
+                return (
+                  reviewDate.getMonth() === currentMonth &&
+                  reviewDate.getFullYear() === currentYear
+                );
+              }).length;
+
+              monthlyReviewsSpan.textContent = monthlyCount;
+            }
+
+            function updatePagination() {
+              const totalPages = Math.ceil(reviewsData.length / reviewsPerPage);
+              currentPageSpan.textContent = currentPage;
+              totalPagesSpan.textContent = totalPages;
+
+              prevPageBtn.disabled = currentPage === 1;
+              nextPageBtn.disabled =
+                currentPage === totalPages || totalPages === 0;
+            }
+
+            function setupEventListeners() {
+              prevPageBtn.addEventListener("click", () => {
+                if (currentPage > 1) {
+                  currentPage--;
+                  renderReviews();
+                  updatePagination();
+                }
+              });
+
+              nextPageBtn.addEventListener("click", () => {
+                const totalPages = Math.ceil(
+                  reviewsData.length / reviewsPerPage
+                );
+                if (currentPage < totalPages) {
+                  currentPage++;
+                  renderReviews();
+                  updatePagination();
+                }
+              });
+
+              reviewForm.addEventListener("submit", submitReview);
+              resetBtn.addEventListener("click", resetForm);
+            }
+
+            // Initialize the page when loaded
+            init();
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        fetchAndRenderReviews();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modern Popup Form</title>
+    <style>
+      :root {
+        --primary-blue: #06234d;
+        --secondary-blue: #30acf6;
+        --primary-green: #6eb405;
+        --light-green: #a6d85d;
+        --dark-text: #333333;
+        --light-text: #ffffff;
+        --light-bg: #fefefe;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .contact-page {
+        margin: 0;
+        padding: 0;
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+
+      .contact-btn {
+        padding: 12px 30px;
+        background: var(--primary-green);
+        color: var(--light-text);
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .contact-btn:hover {
+        background: var(--light-green);
+      }
+
+      .contact-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .contact-modal-content {
+        background: var(--light-bg);
+        padding: 30px;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        margin: 100px auto;
+        position: relative;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.4s ease;
+      }
+
+      .contact-form-wrapper {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .contact-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 26px;
+        color: #999;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .contact-close:hover {
+        color: var(--primary-blue);
+      }
+
+      .contact-heading {
+        text-align: center;
+        color: var(--primary-blue);
+        margin-bottom: 20px;
+      }
+
+      form input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin: 10px 0 16px;
+        font-size: 15px;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s;
+        background-color: #f8f8f8;
+      }
+
+      form input:focus {
+        outline: none;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(110, 180, 5, 0.2);
+        background-color: #fff;
+      }
+
+      .contact-submit-btn {
+        background: var(--primary-green);
+        color: var(--light-text);
+        border: none;
+        width: 50%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-left: 25%;
+        transition: background 0.3s ease;
+      }
+
+      .contact-submit-btn:hover {
+        background: var(--light-green);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="contact-page">
+      <button class="contact-btn" onclick="openModal()">Open Form</button>
+
+      <div id="myModal" class="contact-modal">
+        <div class="contact-modal-content">
+          <span class="contact-close" onclick="closeModal()">&times;</span>
+          <h2 class="contact-heading">✍️ Get in Touch</h2>
+          <h4 style="text-align: center">
+            We will get in contact as soon as possible
+          </h4>
+          <div class="contact-form-wrapper">
+            <form id="contactForm">
+              <input type="text" id="name" placeholder="Full Name" required />
+              <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+              />
+              <input type="tel" id="telno" placeholder="Phone Number" />
+              <button type="submit" class="contact-submit-btn">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function openModal() {
+        document.getElementById("myModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("myModal").style.display = "none";
+      }
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("myModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const data = {
+            username: document.getElementById("name").value.trim(),
+            emailid: document.getElementById("email").value.trim(),
+            mobileno: document.getElementById("telno").value.trim(),
+          };
+
+          console.log("Collected Data:", data);
+
+          fetch("http://localhost:3000/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              alert("Message sent successfully!");
+              closeModal();
+              document.getElementById("contactForm").reset();
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("There was an error sending your message.");
+            });
+        });
+    </script>
+  </body>
+</html>

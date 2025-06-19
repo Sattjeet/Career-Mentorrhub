@@ -1,0 +1,49 @@
+.announcement-wrapper .announcement-carousel {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100%) - 12px);
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: 0;
+}
+
+.announcement-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.announcement-carousel :where(.card, .img) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-carousel.dragging {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+
+.announcement-carousel.no-transition {
+  scroll-behavior: auto;
+}
+
+.announcement-carousel.dragging .card {
+  cursor: grab;
+  user-select: none;
+}
+
+.carousel .card {
+  scroll-snap-align: start;
+  height: 340px;
+  list-style: none;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  cursor: pointer;
+  width: 98%;
+  padding-bottom: 15px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}

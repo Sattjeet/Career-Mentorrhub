@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcement Upload</title>
+    <link rel="stylesheet" href="adminstyle.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>📢 Create Announcement</h1>
+        <p>Share important updates with your audience</p>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        ✅ Announcement uploaded successfully!
+      </div>
+
+      <div class="upload-section">
+        <form id="announcementForm">
+          <div class="form-group">
+            <label for="announcementTitle">Announcement Title</label>
+            <textarea
+              id="announcementTitle"
+              class="text-input title-input"
+              placeholder="Enter a compelling title for your announcement..."
+              maxlength="100"
+            ></textarea>
+            <div class="char-counter" id="titleCounter">0/100</div>
+          </div>
+
+          <div class="form-group">
+            <label for="announcementText">Announcement Content</label>
+            <textarea
+              id="announcementText"
+              class="text-input"
+              placeholder="Write your announcement here. Be clear and concise to ensure your message reaches your audience effectively..."
+              maxlength="1000"
+            ></textarea>
+            <div class="char-counter" id="contentCounter">0/1000</div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-secondary" id="previewBtn">
+              Preview
+            </button>
+            <button type="submit" class="btn btn-primary" id="uploadBtn">
+              Upload Announcement
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearBtn">
+              Clear All
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="preview-section" id="previewSection">
+        <div class="preview-title" id="previewTitle"></div>
+        <div class="preview-content" id="previewContent"></div>
+      </div>
+
+      <!-- Leads Section -->
+      <div class="leads-section">
+        <div class="leads-header">
+          <h2>📊 Acquired Leads</h2>
+          <div class="leads-stats">
+            <span class="stat-badge"
+              >Total: <span id="totalLeads">0</span></span
+            >
+            <span class="stat-badge"
+              >This Month: <span id="monthlyLeads">0</span></span
+            >
+          </div>
+        </div>
+
+        <div class="leads-controls">
+          <div class="search-container">
+            <input
+              type="text"
+              id="searchLeads"
+              placeholder="Search leads..."
+              class="search-input"
+            />
+            <button type="button" id="searchBtn" class="search-btn">🔍</button>
+          </div>
+          <div class="filter-container">
+            <select id="dateFilter" class="filter-select">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+            <button type="button" id="exportBtn" class="btn btn-secondary">
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="leads-table-container">
+          <table class="leads-table" id="leadsTable">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Phone No.</th>
+                <th>Email</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <!-- Dynamic content will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button type="button" id="prevPage" class="pagination-btn">
+            ← Previous
+          </button>
+          <span class="page-info">
+            Page <span id="currentPage">1</span> of
+            <span id="totalPages">1</span>
+          </span>
+          <button type="button" id="nextPage" class="pagination-btn">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="adminindex.js"></script>
+  </body>
+</html>
