@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   async function fetchAndRenderReviews() {
     try {
-      const response = await fetch("http://http://13.60.84.13:3000/reviews");
+      const response = await fetch("http://16.171.27.10:3000/reviews");
       const data = await response.json();
       const reviews = data;
       console.log(data);
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   async function fetchAndRenderAnnouncements() {
     try {
-      const response = await fetch("http://http://13.60.84.13:3000/announcements");
+      const response = await fetch("http://16.171.27.10:3000/announcements");
       const data = await response.json();
       const announcements = data;
       console.log(data);
