@@ -851,6 +851,7 @@ form button {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: 0;
+  margin: 15px;
 }
 
 .announcement-carousel::-webkit-scrollbar {
