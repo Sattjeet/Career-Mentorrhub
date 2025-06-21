@@ -10,9 +10,9 @@ app.use(bodyParser.json());
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "cmh-database-1.cdoa880021vr.ap-south-1.rds.amazonaws.com",
   user: "admin",
-  password: "Satt@1234",
+  password: "4NsmEWW8eA6ftcL",
   database: "mentor_hub",
   port: 3306
 });
