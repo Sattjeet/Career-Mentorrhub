@@ -11,9 +11,10 @@ app.use(bodyParser.json());
 // MySQL connection
 const db = mysql.createConnection({
   host: "localhost",
-  user: "root",
+  user: "admin",
   password: "Satt@1234",
-  database: "Mentor_Hub",
+  database: "mentor_hub",
+  port: 3306
 });
 
 db.connect();
